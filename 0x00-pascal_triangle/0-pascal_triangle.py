@@ -4,6 +4,7 @@ This code will generate Pascal's Triangle up to the n-th row,
 ensuring the correct structure and values as demonstrated in the test script.
 """
 
+
 def pascal_triangle(n):
     if n <= 0:
         return []
