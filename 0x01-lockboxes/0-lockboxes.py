@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""
+Each box is numbered sequentially from 0 to n - 1
+"""
 
 
 def canUnlockAll(boxes):
