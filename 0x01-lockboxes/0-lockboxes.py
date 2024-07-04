@@ -3,10 +3,8 @@
 def canUnlockAll(boxes):
     """
     Determine if all boxes can be unlocked.
-    
     Args:
         boxes (list of list of int): List of boxes with keys.
-        
     Returns:
         bool: True if all boxes can be opened, else False.
     """
