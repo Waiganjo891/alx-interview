@@ -1,85 +1,76 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
-The program should print every possible
-solution to the problem
+This module solves the N queens problem.
 """
 import sys
 
 
-def print_usage_and_exit():
+def validate_args():
     """
-    It prints usage and exit
+    Validates the command line arguments.
+    Exits with a status of 1 if the arguments are invalid.
     """
-    print("Usage: nqueens N")
-    sys.exit(1)
+    if len(sys.argv) != 2:
+        print("Usage: nqueens N")
+        sys.exit(1)
+    try:
+        n = int(sys.argv[1])
+    except ValueError:
+        print("N must be a number")
+        sys.exit(1)
+    if n < 4:
+        print("N must be at least 4")
+        sys.exit(1)
+    return n
 
 
-def print_number_error_and_exit():
+def is_safe(board, row, col):
     """
-    Prints number of n-queens
+    Checks if it's safe to place a queen at board[row][col].
+    Returns True if it's safe, otherwise False.
     """
-    print("N must be a number")
-    sys.exit(1)
-
-
-def print_value_error_and_exit():
-    """
-    Checks value of n-queens
-    """
-    print("N must be at least 4")
-    sys.exit(1)
-
-
-def is_valid(board, row, col):
-    """
-    The program should print every possible
-    solution to the problem
-    """
-    for i in range(row):
-        if board[i] == col or \
-           board[i] - i == col - row or \
-           board[i] + i == col + row:
+    for i in range(col):
+        if board[row][i] == 1:
+            return False
+    for i, j in zip(range(row, -1, -1), range(col, -1, -1)):
+        if board[i][j] == 1:
+            return False
+    for i, j in zip(range(row, len(board), 1), range(col, -1, -1)):
+        if board[i][j] == 1:
             return False
     return True
 
 
-def solve_nqueens(n):
+def solve_nqueens(board, col, solutions):
     """
-    The program should print every possible
-    solution to the problem
+    Solves the N queens problem using backtracking.
+    Appends each valid solution to the solutions list.
     """
-    def solve(board, row):
-        """
-        Solves the board and row
-        """
-        if row == n:
-            solutions.append([[i, board[i]] for i in range(n)])
-            return
-        for col in range(n):
-            if is_valid(board, row, col):
-                board[row] = col
-                solve(board, row + 1)
-
-    solutions = []
-    board = [-1] * n
-    solve(board, 0)
-    return solutions
+    if col >= len(board):
+        solutions.append(
+                [
+                    [r, c]
+                    for r in range(len(board))
+                    for c in range(len(board))
+                    if board[r][c] == 1
+                ]
+        )
+        return
+    for i in range(len(board)):
+        if is_safe(board, i, col):
+            board[i][col] = 1
+            solve_nqueens(board, col + 1, solutions)
+            board[i][col] = 0
 
 
 def main():
     """
-    The program should print every possible
-    solution to the problem.
+    Main function to solve the N queens problem.
     """
-    if len(sys.argv) != 2:
-        print_usage_and_exit()
-    try:
-        n = int(sys.argv[1])
-    except ValueError:
-        print_number_error_and_exit()
-    if n < 4:
-        print_value_error_and_exit()
-    solutions = solve_nqueens(n)
+    n = validate_args()
+    board = [[0 for _ in range(n)] for _ in range(n)]
+    solutions = []
+    solve_nqueens(board, 0, solutions)
     for solution in solutions:
         print(solution)
 
